@@ -1,0 +1,862 @@
+{
+  "generatedAt": "2026-06-07T07:31:41.959494+00:00",
+  "overview": {
+    "videoIds": [
+      "AL0AGaoJCWY"
+    ],
+    "totalComments": 5480,
+    "lowInformationComments": 68,
+    "usableComments": 5412,
+    "totalLikesOnComments": 87805,
+    "totalRepliesOnThreads": 2702,
+    "avgCommentLength": 78.71,
+    "bestModel": "Linear Svm",
+    "trainingRowsUsed": 193
+  },
+  "sentimentDistribution": [
+    {
+      "label": "positive",
+      "count": 3328
+    },
+    {
+      "label": "negative",
+      "count": 1823
+    },
+    {
+      "label": "neutral",
+      "count": 261
+    },
+    {
+      "label": "unclassified",
+      "count": 68
+    }
+  ],
+  "lexiconDistribution": [
+    {
+      "label": "neutral",
+      "count": 3530
+    },
+    {
+      "label": "positive",
+      "count": 1557
+    },
+    {
+      "label": "negative",
+      "count": 393
+    }
+  ],
+  "lengthBySentiment": [
+    {
+      "label": "negative",
+      "comments": 1823,
+      "avgLength": 93.66,
+      "avgLikes": 8.18,
+      "avgReplies": 0.37
+    },
+    {
+      "label": "neutral",
+      "comments": 261,
+      "avgLength": 45.49,
+      "avgLikes": 1.62,
+      "avgReplies": 0.16
+    },
+    {
+      "label": "positive",
+      "comments": 3328,
+      "avgLength": 74.49,
+      "avgLikes": 21.77,
+      "avgReplies": 0.6
+    },
+    {
+      "label": "unclassified",
+      "comments": 68,
+      "avgLength": 12.19,
+      "avgLikes": 0.19,
+      "avgReplies": 0.0
+    }
+  ],
+  "commentsOverTime": [
+    {
+      "date": "2026-06-04",
+      "positive": 3079,
+      "negative": 1664,
+      "neutral": 244
+    },
+    {
+      "date": "2026-06-05",
+      "positive": 205,
+      "negative": 120,
+      "neutral": 11
+    },
+    {
+      "date": "2026-06-06",
+      "positive": 44,
+      "negative": 38,
+      "neutral": 6
+    },
+    {
+      "date": "2026-06-07",
+      "positive": 0,
+      "negative": 1,
+      "neutral": 0
+    }
+  ],
+  "keywordsBySentiment": {
+    "positive": [
+      {
+        "term": "knicks",
+        "count": 1219
+      },
+      {
+        "term": "brunson",
+        "count": 824
+      },
+      {
+        "term": "spurs",
+        "count": 661
+      },
+      {
+        "term": "game",
+        "count": 570
+      },
+      {
+        "term": "win",
+        "count": 393
+      },
+      {
+        "term": "team",
+        "count": 300
+      },
+      {
+        "term": "jalen",
+        "count": 283
+      },
+      {
+        "term": "all",
+        "count": 231
+      },
+      {
+        "term": "finals",
+        "count": 218
+      },
+      {
+        "term": "new",
+        "count": 216
+      },
+      {
+        "term": "good",
+        "count": 200
+      },
+      {
+        "term": "york",
+        "count": 189
+      },
+      {
+        "term": "let",
+        "count": 185
+      },
+      {
+        "term": "series",
+        "count": 164
+      },
+      {
+        "term": "will",
+        "count": 162
+      },
+      {
+        "term": "wemby",
+        "count": 161
+      },
+      {
+        "term": "fan",
+        "count": 155
+      },
+      {
+        "term": "time",
+        "count": 153
+      }
+    ],
+    "negative": [
+      {
+        "term": "knicks",
+        "count": 490
+      },
+      {
+        "term": "spurs",
+        "count": 415
+      },
+      {
+        "term": "wemby",
+        "count": 314
+      },
+      {
+        "term": "music",
+        "count": 303
+      },
+      {
+        "term": "game",
+        "count": 259
+      },
+      {
+        "term": "intro",
+        "count": 188
+      },
+      {
+        "term": "out",
+        "count": 139
+      },
+      {
+        "term": "fox",
+        "count": 133
+      },
+      {
+        "term": "get",
+        "count": 121
+      },
+      {
+        "term": "play",
+        "count": 115
+      },
+      {
+        "term": "all",
+        "count": 115
+      },
+      {
+        "term": "team",
+        "count": 108
+      },
+      {
+        "term": "brunson",
+        "count": 105
+      },
+      {
+        "term": "lol",
+        "count": 97
+      },
+      {
+        "term": "will",
+        "count": 91
+      },
+      {
+        "term": "how",
+        "count": 90
+      },
+      {
+        "term": "got",
+        "count": 90
+      },
+      {
+        "term": "kat",
+        "count": 90
+      }
+    ],
+    "neutral": [
+      {
+        "term": "knicks",
+        "count": 129
+      },
+      {
+        "term": "more",
+        "count": 34
+      },
+      {
+        "term": "will",
+        "count": 21
+      },
+      {
+        "term": "spurs",
+        "count": 17
+      },
+      {
+        "term": "way",
+        "count": 17
+      },
+      {
+        "term": "win",
+        "count": 16
+      },
+      {
+        "term": "brunson",
+        "count": 16
+      },
+      {
+        "term": "beat",
+        "count": 15
+      },
+      {
+        "term": "wemby",
+        "count": 13
+      },
+      {
+        "term": "game",
+        "count": 10
+      },
+      {
+        "term": "okc",
+        "count": 10
+      },
+      {
+        "term": "guard",
+        "count": 10
+      },
+      {
+        "term": "did",
+        "count": 9
+      },
+      {
+        "term": "kat",
+        "count": 9
+      },
+      {
+        "term": "playing",
+        "count": 8
+      },
+      {
+        "term": "let",
+        "count": 8
+      },
+      {
+        "term": "think",
+        "count": 7
+      },
+      {
+        "term": "look",
+        "count": 7
+      }
+    ]
+  },
+  "topComments": {
+    "overall": [
+      {
+        "author": "@nysports1",
+        "text": "EVERYONE BETTER THAN JALEN BRUNSON TIL IT'S TIME TO BE BETTER THAN JALEN BRUNSON",
+        "sentiment": "positive",
+        "likes": 17627,
+        "replies": 432
+      },
+      {
+        "author": "@ke_vveeeeee",
+        "text": "i still cannot believe im finally watching great basketball again. May the best team win",
+        "sentiment": "positive",
+        "likes": 8466,
+        "replies": 169
+      },
+      {
+        "author": "@OzuRay",
+        "text": "12 straight playoffs wins for the Knicks is wild.",
+        "sentiment": "positive",
+        "likes": 6469,
+        "replies": 101
+      },
+      {
+        "author": "@mattmartinez1491",
+        "text": "Greatest New York Knicks win I’ve seen in my lifetime, I was stunned",
+        "sentiment": "positive",
+        "likes": 5452,
+        "replies": 97
+      },
+      {
+        "author": "@PinkArchers",
+        "text": "Brunson really went clutch at the end there",
+        "sentiment": "positive",
+        "likes": 4419,
+        "replies": 96
+      },
+      {
+        "author": "@4tr9ll59",
+        "text": "0:41 I thought my phone was tripping when that music cut on",
+        "sentiment": "negative",
+        "likes": 3740,
+        "replies": 121
+      },
+      {
+        "author": "@nrox8823",
+        "text": "The Brunson burner man. Dude been making some tough shots all year.",
+        "sentiment": "positive",
+        "likes": 3402,
+        "replies": 20
+      },
+      {
+        "author": "@SilentWeaponsIII",
+        "text": "Jalen Brunson, the King of Crunch Time",
+        "sentiment": "positive",
+        "likes": 3090,
+        "replies": 41
+      }
+    ],
+    "positive": [
+      {
+        "author": "@nysports1",
+        "text": "EVERYONE BETTER THAN JALEN BRUNSON TIL IT'S TIME TO BE BETTER THAN JALEN BRUNSON",
+        "sentiment": "positive",
+        "likes": 17627,
+        "replies": 432
+      },
+      {
+        "author": "@ke_vveeeeee",
+        "text": "i still cannot believe im finally watching great basketball again. May the best team win",
+        "sentiment": "positive",
+        "likes": 8466,
+        "replies": 169
+      },
+      {
+        "author": "@OzuRay",
+        "text": "12 straight playoffs wins for the Knicks is wild.",
+        "sentiment": "positive",
+        "likes": 6469,
+        "replies": 101
+      },
+      {
+        "author": "@mattmartinez1491",
+        "text": "Greatest New York Knicks win I’ve seen in my lifetime, I was stunned",
+        "sentiment": "positive",
+        "likes": 5452,
+        "replies": 97
+      },
+      {
+        "author": "@PinkArchers",
+        "text": "Brunson really went clutch at the end there",
+        "sentiment": "positive",
+        "likes": 4419,
+        "replies": 96
+      },
+      {
+        "author": "@nrox8823",
+        "text": "The Brunson burner man. Dude been making some tough shots all year.",
+        "sentiment": "positive",
+        "likes": 3402,
+        "replies": 20
+      },
+      {
+        "author": "@SilentWeaponsIII",
+        "text": "Jalen Brunson, the King of Crunch Time",
+        "sentiment": "positive",
+        "likes": 3090,
+        "replies": 41
+      },
+      {
+        "author": "@Gmc1711",
+        "text": "Props to Josh Hart despite having an off night, his 15 rebs was huge in this game.",
+        "sentiment": "positive",
+        "likes": 2661,
+        "replies": 101
+      }
+    ],
+    "negative": [
+      {
+        "author": "@4tr9ll59",
+        "text": "0:41 I thought my phone was tripping when that music cut on",
+        "sentiment": "negative",
+        "likes": 3740,
+        "replies": 121
+      },
+      {
+        "author": "@justintejada3243",
+        "text": "I know Jalen Brunson was the hero down the stretch, but shout out KAT for putting the Knicks back in the game when it looked like the Spurs were gonna run away with it. His defense on Wemby was amazing as well.",
+        "sentiment": "negative",
+        "likes": 1728,
+        "replies": 32
+      },
+      {
+        "author": "@patrickcorlett9623",
+        "text": "shoutout jose alverado coming off the bench and doing his thing when brunson was cold that early first half, dude really turned up with the bench and got them back in that game",
+        "sentiment": "negative",
+        "likes": 1402,
+        "replies": 16
+      },
+      {
+        "author": "@Loveselfloveall1",
+        "text": "I love how Towns was not afraid to attack wemby 👍🏾. And Brunson’s lay up package is superb.",
+        "sentiment": "negative",
+        "likes": 1360,
+        "replies": 28
+      },
+      {
+        "author": "@xyzlenso",
+        "text": "clutching without flop is amazing",
+        "sentiment": "negative",
+        "likes": 1218,
+        "replies": 36
+      },
+      {
+        "author": "@randallflores-4673",
+        "text": "Been a Knick Fan since the 90's. This is something special to watch.",
+        "sentiment": "negative",
+        "likes": 637,
+        "replies": 35
+      },
+      {
+        "author": "@Log0ff-p3p",
+        "text": "1:02 bro what is this music",
+        "sentiment": "negative",
+        "likes": 605,
+        "replies": 62
+      },
+      {
+        "author": "@valtrex_itch5987",
+        "text": "They did the Knicks dirty with that opening line up track.",
+        "sentiment": "negative",
+        "likes": 467,
+        "replies": 11
+      }
+    ],
+    "neutral": [
+      {
+        "author": "@DawnSGC",
+        "text": "The Knicks have been unstoppable since they're down 2-1 against the Hawks.  12 wins in a row!",
+        "sentiment": "neutral",
+        "likes": 274,
+        "replies": 25
+      },
+      {
+        "author": "@joelfmorel",
+        "text": "What will they say when the Knicks win?\n\nThat’s the million dollar question.",
+        "sentiment": "neutral",
+        "likes": 18,
+        "replies": 0
+      },
+      {
+        "author": "@canucan",
+        "text": "Thought everybody was saying OKC Spurs was the real Finals",
+        "sentiment": "neutral",
+        "likes": 17,
+        "replies": 2
+      },
+      {
+        "author": "@kinghill109",
+        "text": "Knicks in 4 🏀🏆🔥🔥🔥🔥🔥",
+        "sentiment": "neutral",
+        "likes": 16,
+        "replies": 0
+      },
+      {
+        "author": "@fatcattheloveboat4978",
+        "text": "The Knicks is the A-Team. They love it when a plan comes together.",
+        "sentiment": "neutral",
+        "likes": 11,
+        "replies": 2
+      },
+      {
+        "author": "@AmazingGuy13",
+        "text": "The Knicks find a way again to win their 12th straight playoff game. 3 more to go.",
+        "sentiment": "neutral",
+        "likes": 8,
+        "replies": 1
+      },
+      {
+        "author": "@davidz-c137",
+        "text": "Thank god they traded Randle 😂",
+        "sentiment": "neutral",
+        "likes": 5,
+        "replies": 0
+      },
+      {
+        "author": "@AmazingGuy13",
+        "text": "3 more to go!",
+        "sentiment": "neutral",
+        "likes": 3,
+        "replies": 1
+      }
+    ]
+  },
+  "modelComparison": [
+    {
+      "model": "Linear Svm",
+      "accuracy": 0.6923,
+      "macroF1": 0.4889,
+      "weightedF1": 0.6769,
+      "type": "Supervised"
+    },
+    {
+      "model": "Logistic Regression",
+      "accuracy": 0.641,
+      "macroF1": 0.455,
+      "weightedF1": 0.6299,
+      "type": "Supervised"
+    },
+    {
+      "model": "Naive Bayes",
+      "accuracy": 0.6667,
+      "macroF1": 0.4142,
+      "weightedF1": 0.6,
+      "type": "Supervised"
+    },
+    {
+      "model": "Lexicon Baseline",
+      "accuracy": 0.4145,
+      "macroF1": 0.3826,
+      "weightedF1": 0.4744,
+      "type": "Rule-based"
+    }
+  ],
+  "modelMetrics": {
+    "best_model": "linear_svm",
+    "training_rows_used": 193,
+    "label_distribution": {
+      "positive": 113,
+      "negative": 62,
+      "neutral": 18
+    },
+    "metrics": {
+      "logistic_regression": {
+        "accuracy": 0.641,
+        "macro_f1": 0.455,
+        "weighted_f1": 0.6299,
+        "labels": [
+          "negative",
+          "neutral",
+          "positive"
+        ],
+        "classification_report": {
+          "negative": {
+            "precision": 0.5294117647058824,
+            "recall": 0.75,
+            "f1-score": 0.6206896551724138,
+            "support": 12.0
+          },
+          "neutral": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1-score": 0.0,
+            "support": 4.0
+          },
+          "positive": {
+            "precision": 0.8,
+            "recall": 0.6956521739130435,
+            "f1-score": 0.7441860465116279,
+            "support": 23.0
+          },
+          "accuracy": 0.6410256410256411,
+          "macro avg": {
+            "precision": 0.4431372549019608,
+            "recall": 0.48188405797101447,
+            "f1-score": 0.45495856722801387,
+            "support": 39.0
+          },
+          "weighted avg": {
+            "precision": 0.6346907993966818,
+            "recall": 0.6410256410256411,
+            "f1-score": 0.6298603828676002,
+            "support": 39.0
+          }
+        },
+        "confusion_matrix": [
+          [
+            9,
+            1,
+            2
+          ],
+          [
+            2,
+            0,
+            2
+          ],
+          [
+            6,
+            1,
+            16
+          ]
+        ]
+      },
+      "naive_bayes": {
+        "accuracy": 0.6667,
+        "macro_f1": 0.4142,
+        "weighted_f1": 0.6,
+        "labels": [
+          "negative",
+          "neutral",
+          "positive"
+        ],
+        "classification_report": {
+          "negative": {
+            "precision": 0.8,
+            "recall": 0.3333333333333333,
+            "f1-score": 0.47058823529411764,
+            "support": 12.0
+          },
+          "neutral": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1-score": 0.0,
+            "support": 4.0
+          },
+          "positive": {
+            "precision": 0.6470588235294118,
+            "recall": 0.9565217391304348,
+            "f1-score": 0.7719298245614035,
+            "support": 23.0
+          },
+          "accuracy": 0.6666666666666666,
+          "macro avg": {
+            "precision": 0.48235294117647065,
+            "recall": 0.429951690821256,
+            "f1-score": 0.414172686618507,
+            "support": 39.0
+          },
+          "weighted avg": {
+            "precision": 0.6277526395173455,
+            "recall": 0.6666666666666666,
+            "f1-score": 0.6000370458574793,
+            "support": 39.0
+          }
+        },
+        "confusion_matrix": [
+          [
+            4,
+            0,
+            8
+          ],
+          [
+            0,
+            0,
+            4
+          ],
+          [
+            1,
+            0,
+            22
+          ]
+        ]
+      },
+      "linear_svm": {
+        "accuracy": 0.6923,
+        "macro_f1": 0.4889,
+        "weighted_f1": 0.6769,
+        "labels": [
+          "negative",
+          "neutral",
+          "positive"
+        ],
+        "classification_report": {
+          "negative": {
+            "precision": 0.6,
+            "recall": 0.75,
+            "f1-score": 0.6666666666666666,
+            "support": 12.0
+          },
+          "neutral": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1-score": 0.0,
+            "support": 4.0
+          },
+          "positive": {
+            "precision": 0.8181818181818182,
+            "recall": 0.782608695652174,
+            "f1-score": 0.8,
+            "support": 23.0
+          },
+          "accuracy": 0.6923076923076923,
+          "macro avg": {
+            "precision": 0.4727272727272727,
+            "recall": 0.5108695652173912,
+            "f1-score": 0.48888888888888893,
+            "support": 39.0
+          },
+          "weighted avg": {
+            "precision": 0.6671328671328671,
+            "recall": 0.6923076923076923,
+            "f1-score": 0.676923076923077,
+            "support": 39.0
+          }
+        },
+        "confusion_matrix": [
+          [
+            9,
+            1,
+            2
+          ],
+          [
+            2,
+            0,
+            2
+          ],
+          [
+            4,
+            1,
+            18
+          ]
+        ]
+      }
+    }
+  },
+  "lexiconMetrics": {
+    "lexicon_method": "rule_based_custom_english_sports_lexicon",
+    "evaluation": {
+      "rows_evaluated": 193,
+      "accuracy": 0.4145,
+      "macro_f1": 0.3826,
+      "weighted_f1": 0.4744,
+      "labels": [
+        "negative",
+        "neutral",
+        "positive"
+      ],
+      "classification_report": {
+        "negative": {
+          "precision": 0.6842105263157895,
+          "recall": 0.20967741935483872,
+          "f1-score": 0.32098765432098764,
+          "support": 62.0
+        },
+        "neutral": {
+          "precision": 0.13274336283185842,
+          "recall": 0.8333333333333334,
+          "f1-score": 0.22900763358778625,
+          "support": 18.0
+        },
+        "positive": {
+          "precision": 0.8524590163934426,
+          "recall": 0.46017699115044247,
+          "f1-score": 0.5977011494252874,
+          "support": 113.0
+        },
+        "accuracy": 0.41450777202072536,
+        "macro avg": {
+          "precision": 0.5564709685136968,
+          "recall": 0.5010625812795382,
+          "f1-score": 0.38256547911135375,
+          "support": 193.0
+        },
+        "weighted avg": {
+          "precision": 0.7312865389378829,
+          "recall": 0.41450777202072536,
+          "f1-score": 0.4744228075520148,
+          "support": 193.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          13,
+          41,
+          8
+        ],
+        [
+          2,
+          15,
+          1
+        ],
+        [
+          4,
+          57,
+          52
+        ]
+      ],
+      "label_distribution_manual": {
+        "positive": 113,
+        "negative": 62,
+        "neutral": 18
+      },
+      "label_distribution_lexicon": {
+        "neutral": 113,
+        "positive": 61,
+        "negative": 19
+      }
+    },
+    "full_prediction_distribution": {
+      "neutral": 3530,
+      "positive": 1557,
+      "negative": 393
+    }
+  }
+}

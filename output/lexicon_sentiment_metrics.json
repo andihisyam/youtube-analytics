@@ -1,0 +1,79 @@
+{
+  "lexicon_method": "rule_based_custom_english_sports_lexicon",
+  "evaluation": {
+    "rows_evaluated": 193,
+    "accuracy": 0.4145,
+    "macro_f1": 0.3826,
+    "weighted_f1": 0.4744,
+    "labels": [
+      "negative",
+      "neutral",
+      "positive"
+    ],
+    "classification_report": {
+      "negative": {
+        "precision": 0.6842105263157895,
+        "recall": 0.20967741935483872,
+        "f1-score": 0.32098765432098764,
+        "support": 62.0
+      },
+      "neutral": {
+        "precision": 0.13274336283185842,
+        "recall": 0.8333333333333334,
+        "f1-score": 0.22900763358778625,
+        "support": 18.0
+      },
+      "positive": {
+        "precision": 0.8524590163934426,
+        "recall": 0.46017699115044247,
+        "f1-score": 0.5977011494252874,
+        "support": 113.0
+      },
+      "accuracy": 0.41450777202072536,
+      "macro avg": {
+        "precision": 0.5564709685136968,
+        "recall": 0.5010625812795382,
+        "f1-score": 0.38256547911135375,
+        "support": 193.0
+      },
+      "weighted avg": {
+        "precision": 0.7312865389378829,
+        "recall": 0.41450777202072536,
+        "f1-score": 0.4744228075520148,
+        "support": 193.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        13,
+        41,
+        8
+      ],
+      [
+        2,
+        15,
+        1
+      ],
+      [
+        4,
+        57,
+        52
+      ]
+    ],
+    "label_distribution_manual": {
+      "positive": 113,
+      "negative": 62,
+      "neutral": 18
+    },
+    "label_distribution_lexicon": {
+      "neutral": 113,
+      "positive": 61,
+      "negative": 19
+    }
+  },
+  "full_prediction_distribution": {
+    "neutral": 3530,
+    "positive": 1557,
+    "negative": 393
+  }
+}

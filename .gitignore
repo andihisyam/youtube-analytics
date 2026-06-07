@@ -1,0 +1,33 @@
+# Secrets
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Frontend dependencies and build output
+dashboard/node_modules/
+dashboard/dist/
+dashboard/vite-dev*.log
+
+# Raw extracted data
+data/raw/
+
+# Large generated outputs
+output/clean_comments_sample.csv
+output/clean_comments_sample.json
+output/clean_comments_with_predictions.csv
+output/clean_comments_with_predictions.json
+output/clean_comments_with_lexicon_predictions.csv
+output/clean_comments_with_lexicon_predictions.json
+
+# Keep lightweight experiment artifacts
+!output/al0agaojcwY_comment_sample_200_for_labeling.csv
+!output/labeled_comments_used_for_training.csv
+!output/lexicon_vs_manual_labeled_sample.csv
+!output/sentiment_model_metrics.json
+!output/lexicon_sentiment_metrics.json
+
+# OS/editor noise
+.DS_Store
+Thumbs.db

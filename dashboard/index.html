@@ -1,0 +1,28 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouTube Analytics Pipeline Dashboard</title>
+  </head>
+  <body>
+    <div id="root">
+      <main style="font-family: system-ui, sans-serif; padding: 32px; color: #111827; background: #f6f7f9; min-height: 100vh;">
+        Loading YouTube analytics dashboard...
+      </main>
+    </div>
+    <script>
+      window.addEventListener("error", function (event) {
+        var root = document.getElementById("root");
+        if (!root) return;
+        root.innerHTML = "<main style='font-family: system-ui, sans-serif; padding: 32px; color: #991b1b; background: #fff7f7; min-height: 100vh;'><h1 style='font-size: 24px;'>Dashboard runtime error</h1><pre style='white-space: pre-wrap;'>" + String(event.message || "Unknown error") + "</pre></main>";
+      });
+      window.addEventListener("unhandledrejection", function (event) {
+        var root = document.getElementById("root");
+        if (!root) return;
+        root.innerHTML = "<main style='font-family: system-ui, sans-serif; padding: 32px; color: #991b1b; background: #fff7f7; min-height: 100vh;'><h1 style='font-size: 24px;'>Dashboard async error</h1><pre style='white-space: pre-wrap;'>" + String(event.reason && event.reason.message ? event.reason.message : event.reason || "Unknown error") + "</pre></main>";
+      });
+    </script>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
