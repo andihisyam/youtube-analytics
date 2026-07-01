@@ -1,0 +1,772 @@
+YOUTUBE ANALYTICS PIPELINE - END TO END EXPLANATION
+
+1. Gambaran Besar Project
+
+Project ini adalah project end-to-end analytics pipeline untuk mengambil data dari YouTube, menyimpannya ke database PostgreSQL, membersihkannya, mengolahnya menjadi data siap analisis, menjalankan analisis sentimen, lalu menampilkan hasilnya dalam dashboard React.js.
+
+Kalau dijelaskan dengan sangat sederhana, alurnya seperti ini:
+
+1. Ambil data dari YouTube API
+2. Simpan data mentah ke file JSON
+3. Load data mentah ke PostgreSQL
+4. Bersihkan dan rapikan data di SQL
+5. Buat data ringkasan untuk analisis
+6. Jalankan analisis sentimen
+7. Export hasil ke JSON
+8. Tampilkan hasil di dashboard React.js
+
+Jadi project ini bukan hanya "ambil data lalu plot chart", tetapi benar-benar membangun alur data dari sumber awal sampai hasil akhir.
+
+
+2. Tujuan Utama Project
+
+Tujuan project ini ada beberapa:
+
+- Membuktikan bahwa kita bisa mengambil data dari API publik secara terstruktur
+- Membuktikan bahwa kita bisa membangun pipeline data yang rapi
+- Membuktikan bahwa kita bisa memakai PostgreSQL untuk raw, staging, dan mart layer
+- Membandingkan beberapa pendekatan sentimen:
+  manual label + supervised model + lexicon baseline
+- Menampilkan hasil akhir dalam dashboard yang bisa dipakai ulang
+
+Dengan kata lain, project ini menunjukkan gabungan skill:
+
+- Data Engineering
+- Data Analytics
+- NLP / Sentiment Analysis
+- Dashboard Development
+
+
+3. Tahap 1 - Extract Data dari YouTube API
+
+Tahap pertama adalah mengambil data dari YouTube API.
+
+Kita memakai YouTube Data API v3 dengan API key. Kita tidak memakai OAuth karena data yang kita ambil adalah data publik, jadi API key sudah cukup.
+
+Data yang diambil berasal dari channel NBA dan terutama berfokus pada video:
+
+AL0AGaoJCWY
+
+yang mewakili video:
+
+#3 KNICKS at #2 SPURS | NBA FINALS GAME 1 HIGHLIGHTS | June 3, 2026
+
+File Python utama untuk tahap ini adalah:
+
+src/extract_youtube.py
+
+Di tahap ini, script melakukan beberapa langkah:
+
+a. Ambil metadata channel
+
+Kita mengambil data channel NBA, seperti:
+
+- channel id
+- channel title
+- subscriber count
+- view count
+- uploads playlist id
+
+Kenapa uploads playlist id penting?
+
+Karena setiap channel YouTube punya playlist khusus yang berisi semua video upload mereka. Jadi uploads playlist ini dipakai sebagai pintu masuk untuk menemukan video-video dari channel tersebut.
+
+b. Ambil daftar video dari uploads playlist
+
+Setelah tahu uploads playlist id, kita ambil daftar video yang ada di playlist itu. Dari sini kita dapat:
+
+- video id
+- judul video
+- tanggal publish
+- urutan video
+
+c. Ambil detail video
+
+Setelah tahu daftar video, kita ambil detail video seperti:
+
+- title
+- description
+- duration
+- view count
+- like count
+- comment count
+- tags
+
+d. Ambil comment threads
+
+Setelah tahu video yang ingin dianalisis, kita ambil comment threads. Ini adalah bagian penting untuk sentiment analysis.
+
+Khusus untuk video AL0AGaoJCWY, kita menjalankan full pagination dan berhasil mengambil:
+
+- 5480 top-level comments
+- 55 halaman API
+
+Artinya script kita tidak berhenti di 1 halaman komentar saja. Ini penting karena banyak project gagal di sini dan hanya mengambil sedikit komentar.
+
+e. Simpan data mentah
+
+Data yang diambil dari API tidak langsung dibersihkan. Kita simpan dulu dalam bentuk raw JSON ke folder:
+
+data/raw/
+
+Kenapa disimpan mentah dulu?
+
+Karena dalam data engineering, raw data itu penting sebagai sumber asli. Kalau nanti ada transform salah, kita masih punya data mentahnya dan bisa ulang proses.
+
+
+4. Tahap 2 - Load Raw JSON ke PostgreSQL
+
+Setelah data mentah berhasil diambil, langkah berikutnya adalah memasukkan data itu ke database PostgreSQL.
+
+File Python yang dipakai:
+
+src/load_raw_postgres.py
+
+Di tahap ini, script:
+
+- membaca file JSON dari folder raw
+- connect ke PostgreSQL
+- insert data ke tabel raw
+
+Tabel raw yang dipakai:
+
+- raw_channels
+- raw_playlist_items
+- raw_videos
+- raw_comment_threads
+
+Kenapa ada tabel raw?
+
+Karena raw layer dipakai untuk menyimpan data sedekat mungkin dengan bentuk asli dari API.
+
+Isi tabel raw belum rapi untuk analisis. Di dalamnya masih ada JSONB payload. Tapi ini bagus untuk audit, reproducibility, dan traceability.
+
+Contoh manfaat raw layer:
+
+- kalau ada bug di transform, raw data masih aman
+- kalau mau menambah field baru di masa depan, kita tidak perlu re-fetch API dari nol
+- kalau mau audit dari mana data berasal, raw layer adalah sumbernya
+
+
+5. Tahap 3 - Transform Raw ke Staging
+
+Setelah raw data ada di PostgreSQL, kita belum bisa langsung analisis. Kita perlu membersihkan dan merapikannya.
+
+Tahap ini dilakukan memakai SQL, bukan Python.
+
+File SQL:
+
+sql/04_raw_to_staging.sql
+
+Kenapa pakai SQL?
+
+Karena transform seperti:
+
+- deduplication
+- parsing JSONB
+- cast string ke integer
+- pilih record terbaru
+- cleaning field dasar
+
+itu sangat cocok dilakukan di database dengan SQL.
+
+Di tahap ini, data raw diubah menjadi staging tables:
+
+- stg_channels
+- stg_playlist_videos
+- stg_videos
+- stg_comments
+
+Apa yang terjadi di tahap staging?
+
+a. Deduplicate
+
+Karena raw layer bersifat append-only, data yang sama bisa masuk lebih dari sekali jika script dijalankan beberapa kali.
+
+Maka di staging kita ambil versi terbaru saja memakai:
+
+ROW_NUMBER() OVER (...)
+
+Ini memastikan data yang dianalisis tidak duplikat.
+
+b. Parse JSONB
+
+Contohnya:
+
+- ambil title dari snippet
+- ambil view count dari statistics
+- ambil text comment dari topLevelComment
+
+c. Cast tipe data
+
+Dari API, banyak angka datang sebagai string. Misalnya:
+
+- "viewCount": "10186"
+
+Di staging, itu diubah jadi integer/bigint supaya bisa dihitung.
+
+d. Convert durasi
+
+YouTube memberi durasi dalam format seperti:
+
+- PT9S
+- PT1M34S
+- PT49M56S
+
+Di staging, durasi ini diubah ke detik supaya mudah dianalisis.
+
+e. Rapikan comment fields
+
+Untuk komentar, kita ambil field yang benar-benar dibutuhkan:
+
+- comment_thread_id
+- author_display_name
+- text_original
+- text_display
+- like_count
+- total_reply_count
+- published_at
+
+
+6. Tahap 4 - Transform Staging ke Mart
+
+Setelah staging bersih, kita buat mart layer.
+
+File SQL:
+
+sql/05_staging_to_mart.sql
+
+Mart adalah layer yang sudah siap dipakai untuk analisis dan dashboard.
+
+Tabel mart yang dibuat:
+
+- mart_channel_summary
+- mart_video_metrics
+- mart_comment_summary
+- mart_comment_sentiment_ready
+
+Penjelasan singkatnya:
+
+a. mart_channel_summary
+
+Berisi ringkasan channel, seperti:
+
+- total subscriber
+- total views
+- total tracked videos
+- total loaded comments
+
+b. mart_video_metrics
+
+Berisi metrik video:
+
+- title
+- duration
+- views
+- likes
+- comment count
+- engagement score
+- engagement rate
+
+c. mart_comment_summary
+
+Berisi ringkasan komentar per video:
+
+- total comments loaded
+- average comment length
+- total comment likes
+- average reply count
+
+d. mart_comment_sentiment_ready
+
+Ini tabel penting untuk sentiment analysis.
+
+Di sini comment sudah dibersihkan secukupnya dan siap dipakai model. Field seperti:
+
+- cleaned_text
+- text_length
+- like_count
+- total_reply_count
+
+sudah tersedia.
+
+
+7. Tahap 5 - Export Data Bersih untuk Labeling dan Analisis
+
+Setelah mart siap, kita perlu menyiapkan data komentar yang bisa dipakai untuk labeling dan analisis lanjutan.
+
+File Python:
+
+src/export_clean_comments.py
+
+Script ini mengekspor komentar bersih dari mart ke CSV dan JSON.
+
+Lalu kita ambil 200 sampel acak khusus untuk video AL0AGaoJCWY untuk dilabeli manual.
+
+File sampelnya:
+
+output/al0agaojcwY_comment_sample_200_for_labeling.csv
+
+Di file ini, kamu memberi label manual:
+
+- positive
+- negative
+- neutral
+
+Beberapa baris kamu kosongkan karena tidak relevan. Itu keputusan yang benar, karena komentar yang tidak jelas atau tidak relevan tidak perlu dipaksa masuk ke model.
+
+
+8. Tahap 6 - Sentiment Analysis dengan Label Manual dan Supervised Models
+
+Setelah manual labeling selesai, kita melatih model supervised.
+
+File Python:
+
+src/train_sentiment_models.py
+
+Kita mencoba 3 model:
+
+- Logistic Regression
+- Naive Bayes
+- Linear SVM
+
+Kenapa 3 model ini?
+
+Karena untuk text classification klasik dengan TF-IDF, ini adalah model yang umum, cepat, ringan, dan bagus untuk baseline maupun perbandingan.
+
+Pipeline supervised ini bekerja seperti ini:
+
+a. Baca file label manual
+b. Buang baris yang manual_label kosong
+c. Ambil cleaned_text
+d. Ubah teks menjadi fitur numerik memakai TF-IDF
+e. Bagi data jadi train dan test
+f. Latih 3 model
+g. Bandingkan akurasinya
+h. Pilih model terbaik
+i. Prediksi seluruh dataset penuh
+
+Hasilnya:
+
+- Linear SVM menjadi model terbaik
+- tetapi kelas neutral masih sulit dikenali
+
+Kenapa neutral sulit?
+
+Karena:
+
+- jumlah neutral hanya 18
+- komentar neutral biasanya ambigu
+- TF-IDF lebih mudah menangkap kata-kata kuat positive/negative daripada neutral
+
+Hasil model disimpan ke:
+
+- models/linear_svm.joblib
+- output/sentiment_model_metrics.json
+- output/clean_comments_with_predictions.csv
+- output/clean_comments_with_predictions.json
+
+
+9. Tahap 7 - Lexicon-Based Sentiment sebagai Baseline
+
+Selain model supervised, kita juga membuat baseline lexicon-based.
+
+File Python:
+
+src/label_sentiment_lexicon.py
+
+Di sini kita memakai rule-based sentiment:
+
+- daftar kata positif
+- daftar kata negatif
+- beberapa phrase
+- sedikit negation handling
+
+Contoh:
+
+- kalau skor > 0 maka positive
+- kalau skor < 0 maka negative
+- kalau skor = 0 maka neutral
+
+Kenapa bikin lexicon?
+
+Karena ini bagus sebagai pembanding.
+
+Dengan begitu kita bisa jawab:
+
+- apakah model machine learning lebih baik dari rule-based?
+- seberapa buruk atau bagus baseline sederhana?
+
+Hasilnya menunjukkan:
+
+- lexicon terlalu sering memprediksi neutral
+- supervised model, terutama SVM, lebih baik secara keseluruhan
+
+Jadi lexicon di project ini dipakai sebagai:
+
+- baseline pembanding
+- bukan model final utama
+
+
+10. Tahap 8 - Export Data Khusus Dashboard
+
+Setelah semua hasil analisis siap, kita perlu menyiapkan data yang akan dipakai React dashboard.
+
+File Python:
+
+src/export_dashboard_data.py
+
+Kenapa perlu file export dashboard?
+
+Karena React dashboard sebaiknya tidak membaca PostgreSQL langsung untuk versi portfolio ini.
+
+Kalau React harus connect ke database live, project jadi lebih rumit karena perlu:
+
+- backend API
+- authentication / access control
+- config database untuk frontend/backend
+
+Padahal tujuan kita adalah membuat dashboard portfolio yang:
+
+- reusable
+- mudah dijalankan
+- mudah dibagikan
+
+Jadi kita memakai pendekatan:
+
+Python / PostgreSQL -> export JSON -> React membaca JSON
+
+File JSON dashboard:
+
+dashboard/public/data/dashboard-data.json
+
+Isi file ini sudah diringkas untuk kebutuhan dashboard, misalnya:
+
+- overview KPI
+- sentiment distribution
+- lexicon distribution
+- model comparison
+- top comments
+- comment activity over time
+- keywords by sentiment
+
+
+11. Tahap 9 - Dashboard React.js
+
+Setelah data dashboard siap, kita membuat dashboard React.js.
+
+Folder dashboard:
+
+dashboard/
+
+File utama frontend:
+
+- dashboard/src/App.jsx
+- dashboard/src/main.jsx
+- dashboard/src/styles.css
+
+Dashboard ini menampilkan:
+
+- total comments
+- total likes pada comments
+- total replies
+- average comment length
+- best model
+- sentiment distribution
+- lexicon distribution
+- model comparison
+- comment activity over time
+- top keywords by sentiment
+- most engaged comments
+
+Jadi dashboard ini adalah lapisan presentasi dari semua kerja data engineering dan sentiment analysis sebelumnya.
+
+
+12. Penjelasan React.js dengan Bahasa Sederhana
+
+Sekarang bagian React.js.
+
+Kalau dijelaskan paling sederhana, React.js adalah library JavaScript untuk membuat user interface.
+
+Artinya React dipakai untuk membangun tampilan web yang:
+
+- dinamis
+- reusable
+- mudah dipecah menjadi komponen kecil
+
+React bekerja dengan ide bahwa tampilan halaman dibangun dari komponen.
+
+Contohnya:
+
+- satu komponen untuk KPI card
+- satu komponen untuk chart panel
+- satu komponen untuk list comment
+
+Jadi daripada membuat halaman panjang besar dalam 1 file HTML biasa, React membuat UI menjadi lebih modular.
+
+
+13. Fitur-Fitur yang Biasa Ada di React.js
+
+Berikut beberapa fitur yang umum di React.js:
+
+a. Components
+
+Komponen adalah potongan UI yang bisa dipakai ulang.
+
+Contoh:
+
+- tombol
+- card
+- tabel
+- chart section
+
+b. Props
+
+Props dipakai untuk mengirim data ke komponen.
+
+Contoh:
+
+- kirim judul panel
+- kirim angka KPI
+- kirim daftar komentar
+
+c. State
+
+State adalah data yang bisa berubah di dalam komponen.
+
+Contoh:
+
+- data dashboard yang awalnya kosong, lalu terisi setelah fetch
+
+d. Hooks
+
+Hooks adalah fitur React untuk memakai state dan lifecycle di functional component.
+
+Yang paling umum:
+
+- useState
+- useEffect
+
+e. Conditional Rendering
+
+React bisa menampilkan UI berbeda tergantung kondisi.
+
+Contoh:
+
+- saat data belum ada -> tampilkan loading
+- saat error -> tampilkan error message
+- saat data sudah ada -> tampilkan dashboard
+
+f. Event Handling
+
+React bisa menangani interaksi user seperti:
+
+- klik tombol
+- input form
+- filter
+
+g. Rendering Data Arrays
+
+React sangat kuat untuk merender daftar data.
+
+Contoh:
+
+- menampilkan list model comparison
+- menampilkan top comments
+- menampilkan legend sentiment
+
+
+14. Fitur React yang Kita Pakai di Project Ini
+
+Project ini memakai React dengan cara yang cukup sederhana dan masuk akal.
+
+Fitur React yang kita pakai:
+
+a. Functional Components
+
+Contohnya di App.jsx kita membuat komponen seperti:
+
+- KpiCard
+- Panel
+- SentimentPie
+- SentimentBars
+- ModelComparison
+- KeywordCloud
+- TopComments
+- TimeSeries
+
+Kenapa pakai component?
+
+Karena dashboard terdiri dari bagian-bagian yang jelas. Dengan komponen, kode jadi lebih rapi dan mudah dibaca.
+
+b. useState
+
+Dipakai untuk menyimpan data dashboard yang di-fetch dari JSON.
+
+Misalnya:
+
+- data
+- error
+
+Kenapa pakai useState?
+
+Karena data awalnya belum ada, lalu setelah fetch berhasil baru diisi.
+
+c. useEffect
+
+Dipakai untuk mengambil file:
+
+dashboard-data.json
+
+saat komponen pertama kali dirender.
+
+Kenapa pakai useEffect?
+
+Karena fetch data adalah side effect. Itu tidak boleh langsung ditulis sembarangan di body komponen.
+
+d. Conditional Rendering
+
+Dipakai untuk:
+
+- menampilkan loading
+- menampilkan error
+- menampilkan dashboard saat data siap
+
+Ini penting supaya user tidak melihat halaman aneh saat data belum siap.
+
+e. Reusable Presentational Components
+
+Komponen seperti KpiCard dan Panel dipakai agar style dan struktur konsisten.
+
+Ini penting untuk dashboard karena banyak bagian yang bentuknya mirip.
+
+
+15. Kenapa Tidak Memakai Fitur React yang Lebih "Berat"
+
+Kamu bertanya bagus sekali: kenapa tidak pakai fitur React yang lebih "umum" atau mungkin lebih canggih?
+
+Jawabannya: karena untuk kebutuhan project ini, kita sengaja memilih pendekatan yang sederhana dan tepat guna.
+
+Contohnya:
+
+a. Tidak memakai Redux / Zustand / global state manager
+
+Kenapa?
+
+Karena project ini hanya membaca satu file JSON dashboard dan tidak punya banyak interaksi kompleks antar halaman.
+
+Kalau dipaksa pakai Redux, itu justru menambah kerumitan tanpa manfaat besar.
+
+b. Tidak memakai React Router
+
+Kenapa?
+
+Karena dashboard ini masih satu halaman utama, bukan aplikasi multi-page yang butuh navigasi kompleks.
+
+c. Tidak memakai backend API live
+
+Kenapa?
+
+Karena tujuan dashboard ini adalah portfolio-ready visualization.
+
+Lebih efisien dan stabil jika React membaca file JSON hasil export daripada harus membuat API live sendiri.
+
+d. Tidak memakai form, auth, atau state kompleks
+
+Kenapa?
+
+Karena user tidak perlu input data apa pun. Dashboard hanya menampilkan hasil pipeline.
+
+e. Tidak memakai useMemo/useCallback secara berlebihan
+
+Kenapa?
+
+Karena itu sering dipakai terlalu dini. Untuk dashboard yang tidak terlalu berat interaksinya, menambah useMemo/useCallback di mana-mana justru membuat kode lebih sulit dibaca tanpa manfaat nyata.
+
+f. Tidak memakai TypeScript
+
+Kenapa?
+
+Bukan karena TypeScript buruk, tetapi karena untuk project ini kita fokus ke:
+
+- pipeline data
+- analisis
+- dashboard cepat jadi
+
+JavaScript biasa sudah cukup untuk tahap ini.
+
+
+16. Kenapa React.js Cocok untuk Dashboard Ini
+
+React cocok di project ini karena:
+
+- dashboard bisa dipecah jadi komponen kecil
+- data bisa dibaca dari JSON hasil export
+- UI bisa dikembangkan lagi nanti
+- mudah diintegrasikan ke portfolio web
+- reusable dan lebih fleksibel daripada Power BI untuk kebutuhan custom web
+
+Jadi React di sini bukan dipakai untuk "ikut-ikutan", tapi karena memang cocok sebagai lapisan presentasi web dari pipeline yang sudah kita bangun.
+
+
+17. Kenapa Tidak Pakai Laravel atau Power BI
+
+a. Kenapa tidak Power BI?
+
+Karena kamu ingin dashboard yang:
+
+- reusable
+- bisa dikontrol lewat code
+- bisa masuk ke portfolio website
+- tidak perlu bikin ulang manual
+
+b. Kenapa tidak Laravel?
+
+Karena Laravel lebih cocok jika kita ingin membangun full web system dengan backend PHP.
+
+Untuk dashboard analytics portfolio seperti ini, React jauh lebih ringan dan fokus.
+
+
+18. Ringkasan Arsitektur Project
+
+Kalau diringkas, arsitektur project kita adalah:
+
+YouTube Data API
+-> Python extraction
+-> raw JSON files
+-> PostgreSQL raw tables
+-> SQL staging tables
+-> SQL mart tables
+-> manual labeling + supervised sentiment + lexicon baseline
+-> export dashboard JSON
+-> React dashboard
+
+Ini adalah alur end-to-end yang cukup lengkap untuk ukuran portfolio project.
+
+
+19. Apa Nilai Jual Project Ini
+
+Project ini kuat karena menunjukkan bahwa kamu bisa:
+
+- mengambil data dari API nyata
+- menangani pagination besar
+- menyimpan data ke PostgreSQL
+- membangun raw, staging, dan mart
+- melakukan analisis sentimen dengan beberapa pendekatan
+- membandingkan model
+- membuat dashboard web custom
+
+Jadi project ini tidak hanya menunjukkan "bisa coding", tapi juga menunjukkan bahwa kamu memahami alur data dari sumber sampai insight.
+
+
+20. Kesimpulan Akhir
+
+Project ini adalah project end-to-end analytics pipeline yang dimulai dari YouTube API, dilanjutkan ke PostgreSQL untuk penyimpanan dan transformasi, diteruskan ke analisis sentimen memakai label manual, supervised learning, dan lexicon baseline, lalu diakhiri dengan dashboard React.js untuk presentasi hasil.
+
+Kalau ingin menjelaskan project ini ke recruiter, dosen, atau interviewer, kamu bisa memakai kalimat sederhana seperti ini:
+
+"I built an end-to-end YouTube analytics pipeline that extracts public data from the YouTube Data API, stores and transforms it in PostgreSQL using raw, staging, and mart layers, compares lexicon-based and supervised sentiment analysis approaches, and presents the results in a React dashboard."
+
+Kalau ingin menjelaskannya dalam bahasa Indonesia:
+
+"Saya membangun pipeline analitik YouTube secara end-to-end, mulai dari pengambilan data melalui YouTube Data API, penyimpanan dan transformasi data di PostgreSQL dengan layer raw, staging, dan mart, perbandingan analisis sentimen berbasis lexicon dan supervised learning, hingga visualisasi hasil dalam dashboard React.js."
